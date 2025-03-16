@@ -9,8 +9,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [emailId, setEmailId] = useState();
-  const [password, setPassword] = useState();
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState();
 
   const handleLogin = async () => {
     try {
@@ -24,8 +25,9 @@ const Login = () => {
       );
 
       dispatch(addUser(res.data));
-      navigate("/");
+      return navigate("/");
     } catch (err) {
+      setError(err?.response?.data) || "Something went wrong";
       console.error(err);
     }
   };
@@ -35,7 +37,7 @@ const Login = () => {
         <div className="card-body items-center gap-[2.5rem]">
           <h2 className="card-title -ml-1">Login</h2>
           <div className="flex flex-col gap-[0.7rem] w-full">
-            <label for="email">Email</label>
+            <label for="email">EmailId</label>
             <input
               id="email"
               type="text"
@@ -47,20 +49,20 @@ const Login = () => {
             />
 
             <label for="password">Password</label>
-            <div className="input validator">
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                required
-                minlength="8"
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-              />
-            </div>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              className="input"
+              required
+              minlength="8"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+            />
+            <p className="text-red-600">{error}</p>
           </div>
           <div className="card-actions">
             <button className="btn btn-primary" onClick={handleLogin}>

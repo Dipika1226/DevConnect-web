@@ -10,7 +10,9 @@ import axios from "axios";
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userData = useSelector((store) => store.user);
   const getUser = async () => {
+    if (userData) return;
     try {
       const res = await axios.get(BASE_URL + "/profile/view", {
         withCredentials: true,
@@ -19,8 +21,9 @@ const Body = () => {
       dispatch(addUser(res.data));
     } catch (err) {
       if (err.status === 401) {
-        navigate("/login");
+        return navigate("/login");
       }
+      //error page for any other error
       console.error(err);
     }
   };
