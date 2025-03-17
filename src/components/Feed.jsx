@@ -7,6 +7,8 @@ import { addToFeed } from "../utils/feedSlice";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
+  const user = useSelector((store) => store.user);
+  console.log(user);
   const dispatch = useDispatch();
   const getFeed = async () => {
     if (feed) return;
@@ -22,13 +24,16 @@ const Feed = () => {
   };
   useEffect(() => {
     getFeed();
-  }, []);
+  }, [{ user }]);
+  if (!feed) return;
+  if (feed.length === 0)
+    return (
+      <p className="text-center text-2xl my-50">"No new users found!☹️"</p>
+    );
   return (
-    feed && (
-      <div>
-        <UserCard user={feed[0]} />
-      </div>
-    )
+    <div>
+      <UserCard user={feed[0]} />
+    </div>
   );
 };
 

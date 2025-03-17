@@ -1,7 +1,25 @@
+import axios from "axios";
 import React from "react";
+import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeUserFromFeed } from "../utils/feedSlice";
 
 const UserCard = ({ user }) => {
-  const { firstName, lastName, age, about, gender, photoURL, skills } = user;
+  const dispatch = useDispatch();
+
+  const handleSendRequest = async (status, userId) => {
+    try {
+      await axios.post(
+        BASE_URL + "/request/send/" + status + "/" + userId,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeUserFromFeed(userId));
+    } catch (err) {}
+  };
+
+  const { _id, firstName, lastName, age, about, gender, photoURL, skills } =
+    user;
   return (
     <div>
       {user && (
@@ -21,10 +39,20 @@ const UserCard = ({ user }) => {
             <p>{about}</p>
             <p>{skills.join(" ,")}</p>
             <div className="card-actions justify-center gap-5">
-              <button className="badge badge-error font-semibold p-3">
+              <button
+                className="badge badge-error font-semibold p-3"
+                onClick={() => {
+                  handleSendRequest("interested", _id);
+                }}
+              >
                 Interested
               </button>
-              <button className="badge badge-primary font-semibold p-3">
+              <button
+                className="badge badge-primary font-semibold p-3"
+                onClick={() => {
+                  handleSendRequest("ignored", _id);
+                }}
+              >
                 Ignore
               </button>
             </div>

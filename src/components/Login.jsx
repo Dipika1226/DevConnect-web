@@ -11,9 +11,13 @@ const Login = () => {
 
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isLoginForm, setIsLoginForm] = useState(false);
   const [error, setError] = useState();
 
   const handleLogin = async () => {
+    setError("");
     try {
       const res = await axios.post(
         BASE_URL + "/login",
@@ -31,12 +35,53 @@ const Login = () => {
       console.error(err);
     }
   };
+  const handleSignUp = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        { firstName, lastName, emailId, password },
+        { withCredentials: true }
+      );
+      console.log(res.data.savedUser);
+      dispatch(addUser(res.data.savedUser));
+      return navigate("/profile");
+    } catch (err) {
+      //err page
+    }
+  };
   return (
     <div>
       <div className="card bg-base-300 w-90 shadow-sm right-[35%] left-[35%] my-16 ">
         <div className="card-body items-center gap-[2.5rem]">
-          <h2 className="card-title -ml-1">Login</h2>
+          <h2 className="card-title -ml-1">
+            {isLoginForm ? "Login" : "Sign Up"}
+          </h2>
           <div className="flex flex-col gap-[0.7rem] w-full">
+            {!isLoginForm && (
+              <>
+                <label for="firstname">firstName</label>
+
+                <input
+                  id="firstname"
+                  type="text"
+                  className="input"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                />
+                <label for="lastName">LastName</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  className="input"
+                  value={lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                />
+              </>
+            )}
             <label for="email">EmailId</label>
             <input
               id="email"
@@ -65,10 +110,23 @@ const Login = () => {
             <p className="text-red-600">{error}</p>
           </div>
           <div className="card-actions">
-            <button className="btn btn-primary" onClick={handleLogin}>
-              Login
+            <button
+              className="btn btn-primary"
+              onClick={isLoginForm ? handleLogin : handleSignUp}
+            >
+              {isLoginForm ? "Login" : "Sign Up"}
             </button>
           </div>
+          <p
+            className="-mt-5 cursor-pointer"
+            onClick={() => {
+              setIsLoginForm(!isLoginForm);
+            }}
+          >
+            {isLoginForm
+              ? "New User? SignUp here"
+              : "Already a user?Login here"}
+          </p>
         </div>
       </div>
     </div>
