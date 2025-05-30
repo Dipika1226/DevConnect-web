@@ -27,7 +27,8 @@ const Feed = () => {
     dispatch(addToFeed(null));
     getFeed();
   }, []);
-  if (!feed) return;
+  // if (!feed) return;
+  if (!feed) return <p className="text-center">Loading feed...</p>;
   if (feed.length === 0)
     return (
       <p className="text-center text-2xl my-50">"No new users found!☹️"</p>
