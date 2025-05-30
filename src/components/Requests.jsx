@@ -50,6 +50,7 @@ const Requests = () => {
         <ul className="list bg-base-200 rounded-box shadow-lg w-1/2 mx-auto my-8">
           {requests.map((request) => {
             const {
+              _id,
               firstName,
               lastName,
               age,
@@ -59,7 +60,7 @@ const Requests = () => {
               skills,
             } = request.fromUserId;
             return (
-              <li className="list-row">
+              <li className="list-row" key={_id}>
                 <div>
                   <img
                     className="size-12 rounded-box bg-base-300"

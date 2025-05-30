@@ -29,34 +29,44 @@ const Connections = () => {
   return (
     <div>
       <h1 className="text-center my-4 text-2xl font-semibold">Connections</h1>
-      <ul className="list bg-base-200 rounded-box shadow-lg w-1/2 mx-auto my-8">
-        {connections.map((connection) => {
-          const { firstName, lastName, age, gender, about, photoURL, skills } =
-            connection;
-          return (
-            <li className="list-row ">
-              <div>
-                <img
-                  className="size-18 rounded-box bg-base-300"
-                  src={photoURL}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="text-md font-semibold">
-                  {firstName + " " + lastName}
+      <div className="min-h-[75vh] my-6">
+        <ul className="list bg-base-200 rounded-box shadow-lg w-1/2 mx-auto my-8">
+          {connections.map((connection) => {
+            const {
+              _id,
+              firstName,
+              lastName,
+              age,
+              gender,
+              about,
+              photoURL,
+              skills,
+            } = connection;
+            return (
+              <li className="list-row " key={_id}>
+                <div>
+                  <img
+                    className="size-18 rounded-box bg-base-300"
+                    src={photoURL}
+                  />
                 </div>
-                {gender && age && (
-                  <div className="text-xs uppercase font-semibold opacity-60">
-                    {gender + " " + age}
+                <div className="flex flex-col gap-2">
+                  <div className="text-md font-semibold">
+                    {firstName + " " + lastName}
                   </div>
-                )}
-                <p className="list-col-wrap text-sm">{about}</p>
-                <p className="list-col-wrap text-sm">{skills.join()}</p>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+                  {gender && age && (
+                    <div className="text-xs uppercase font-semibold opacity-60">
+                      {gender + " " + age}
+                    </div>
+                  )}
+                  <p className="list-col-wrap text-sm">{about}</p>
+                  <p className="list-col-wrap text-sm">{skills.join()}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

@@ -9,15 +9,19 @@ import { addUser } from "../utils/userSlice";
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [gender, setGender] = useState(user.gender);
-  const [age, setAge] = useState(user.age);
-  const [photoURL, setPhotoURL] = useState(user.photoURL);
-  const [skills, setSkills] = useState(user.skills);
-  const [about, setAbout] = useState(user.about);
+  const [gender, setGender] = useState(user.gender || "");
+  const [age, setAge] = useState(user.age || "");
+  const [photoURL, setPhotoURL] = useState(user.photoURL || "");
+  const [skills, setSkills] = useState(user.skills || []);
+  const [about, setAbout] = useState(user.about || "");
   const [error, setError] = useState();
   const [showToast, setShowToast] = useState(false);
 
   const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    setSkills(e.target.value.split(","));
+  };
 
   const saveUpdates = async () => {
     setError("");
@@ -46,7 +50,7 @@ const EditProfile = ({ user }) => {
         <div className="card-body items-center gap-[2.5rem]">
           <h2 className="card-title -ml-1">Update Profile</h2>
           <div className="flex flex-col gap-[0.7rem] w-full">
-            <label for="firstname">FirstName</label>
+            <label htmlFor="firstname">FirstName</label>
             <input
               id="firstname"
               type="text"
@@ -56,7 +60,7 @@ const EditProfile = ({ user }) => {
                 setFirstName(e.target.value);
               }}
             />
-            <label for="lastname">LastName</label>
+            <label htmlFor="lastname">LastName</label>
             <input
               id="lastname"
               type="text"
@@ -76,13 +80,12 @@ const EditProfile = ({ user }) => {
                   setGender(e.target.value);
                 }}
               >
-                {/* <option disabled={true}>Select your gender</option> */}
                 <option>male</option>
                 <option>female</option>
                 <option>others</option>
               </select>
             </fieldset>
-            <label for="age">Age</label>
+            <label htmlFor="age">Age</label>
             <input
               id="age"
               type="number"
@@ -92,17 +95,14 @@ const EditProfile = ({ user }) => {
                 setAge(e.target.value);
               }}
             />
-            <label for="skills">Skills</label>
-            <input
+            <label htmlFor="skills">Skills</label>
+            <textarea
               id="skills"
-              type="text"
               className="input"
               value={skills}
-              onChange={(e) => {
-                setSkills(e.target.value);
-              }}
-            />
-            <label for="photoURL">photoURL</label>
+              onChange={handleChange}
+            ></textarea>
+            <label htmlFor="photoURL">photoURL</label>
             <input
               id="photoURL"
               type="url"

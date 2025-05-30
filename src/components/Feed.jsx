@@ -7,11 +7,12 @@ import { addToFeed } from "../utils/feedSlice";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
-  const user = useSelector((store) => store.user);
-  console.log(user);
+  // const user = useSelector((store) => store.user);
+
   const dispatch = useDispatch();
+
   const getFeed = async () => {
-    if (feed) return;
+    // if (feed) return;
     try {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
@@ -23,8 +24,9 @@ const Feed = () => {
     }
   };
   useEffect(() => {
+    dispatch(addToFeed(null));
     getFeed();
-  }, [{ user }]);
+  }, []);
   if (!feed) return;
   if (feed.length === 0)
     return (

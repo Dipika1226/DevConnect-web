@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [isLoginForm, setIsLoginForm] = useState(false);
+  const [isLoginForm, setIsLoginForm] = useState(true);
   const [error, setError] = useState();
 
   const handleLogin = async () => {
@@ -32,7 +32,6 @@ const Login = () => {
       return navigate("/");
     } catch (err) {
       setError(err?.response?.data) || "Something went wrong";
-      console.error(err);
     }
   };
   const handleSignUp = async () => {
@@ -46,7 +45,7 @@ const Login = () => {
       dispatch(addUser(res.data.savedUser));
       return navigate("/profile");
     } catch (err) {
-      //err page
+      setError(err?.response?.data) || "Something went wrong";
     }
   };
   return (
@@ -59,7 +58,7 @@ const Login = () => {
           <div className="flex flex-col gap-[0.7rem] w-full">
             {!isLoginForm && (
               <>
-                <label for="firstname">firstName</label>
+                <label htmlFor="firstname">firstName</label>
 
                 <input
                   id="firstname"
@@ -70,7 +69,7 @@ const Login = () => {
                     setFirstName(e.target.value);
                   }}
                 />
-                <label for="lastName">LastName</label>
+                <label htmlFor="lastName">LastName</label>
                 <input
                   id="lastName"
                   type="text"
@@ -82,7 +81,7 @@ const Login = () => {
                 />
               </>
             )}
-            <label for="email">EmailId</label>
+            <label htmlFor="email">EmailId</label>
             <input
               id="email"
               type="text"
@@ -93,7 +92,7 @@ const Login = () => {
               }}
             />
 
-            <label for="password">Password</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
