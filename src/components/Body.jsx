@@ -20,7 +20,7 @@ const Body = () => {
       console.log(res);
       dispatch(addUser(res.data));
     } catch (err) {
-      if (err.status === 401) {
+      if (err.response?.status === 401) {
         return navigate("/login");
       }
       //error page for any other error

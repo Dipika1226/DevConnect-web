@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "../utils/connectionSlice";
+import { Link } from "react-router-dom";
 
 const Connections = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const Connections = () => {
                     src={photoURL}
                   />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
                   <div className="text-md font-semibold">
                     {firstName + " " + lastName}
                   </div>
@@ -62,6 +63,9 @@ const Connections = () => {
                   <p className="list-col-wrap text-sm">{about}</p>
                   <p className="list-col-wrap text-sm">{skills.join()}</p>
                 </div>
+                <Link to={"/chat/" + _id} className="my-auto">
+                  <button className="btn btn-primary px-6">Chat</button>
+                </Link>
               </li>
             );
           })}

@@ -79,7 +79,7 @@ const Requests = () => {
                   <p>{about}</p>
                 </div>
                 <button
-                  className="btn btn-active btn-primary"
+                  className="btn btn-primary"
                   onClick={() => {
                     reviewRequest("accepted", request._id);
                   }}
@@ -87,7 +87,7 @@ const Requests = () => {
                   Accept
                 </button>
                 <button
-                  className="btn btn-active btn-secondary"
+                  className="btn btn-secondary"
                   onClick={() => {
                     reviewRequest("rejected", request._id);
                   }}
