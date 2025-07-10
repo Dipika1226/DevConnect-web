@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -12,6 +14,24 @@ const Chat = () => {
   const user = useSelector((store) => store.user);
   const userId = user?._id;
 
+  const fetchChatMessages = async () => {
+    const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
+      withCredentials: true,
+    });
+    console.log(chat.data.messages);
+    const chatMessages = chat?.data?.messages.map((msg) => {
+      const { senderId, text } = msg;
+      return {
+        firstName: senderId.firstName,
+        lastName: senderId.lastName,
+        text,
+      };
+    });
+    setMessages(chatMessages);
+  };
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
   useEffect(() => {
     if (!userId) return;
     const socket = createSocketConnection();
@@ -54,11 +74,16 @@ const Chat = () => {
       </h1>
       <div
         ref={scrollRef}
-        className="overflow-auto h-[63vh] border-b border-gray-700"
+        className="overflow-auto h-[63vh] border-b border-gray-700 mx-3"
       >
         {messages.map((msg, index) => {
           return (
-            <div key={index} class="chat chat-start p-3">
+            <div
+              key={index}
+              class={`chat ${
+                user.firstName === msg.firstName ? "chat-start" : "chat-end"
+              } p-3`}
+            >
               <div class="chat-image avatar">
                 <div class="w-10 rounded-full">
                   <img
@@ -78,7 +103,7 @@ const Chat = () => {
         })}
       </div>
       <form
-        className="absolute bottom-4 w-[68vw] flex"
+        className="absolute bottom-2 w-[68vw] flex"
         onSubmit={(e) => {
           e.preventDefault();
         }}
