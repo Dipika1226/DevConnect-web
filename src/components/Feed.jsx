@@ -1,38 +1,58 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UserCard from "./UserCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addToFeed } from "../utils/feedSlice";
 
 const Feed = () => {
-  const feed = useSelector((store) => store.feed);
-  // const user = useSelector((store) => store.user);
-
+  const [feed, setFeed] = useState([]);
+  const [swiped, setSwiped] = useState([]);
   const dispatch = useDispatch();
 
   const getFeed = async () => {
-    // if (feed) return;
     try {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
       });
-      console.log(res);
-      dispatch(addToFeed(res?.data));
+      dispatch(addToFeed(res.data));
+      setFeed(res.data);
     } catch (err) {
       console.error(err);
     }
   };
+
   useEffect(() => {
-    dispatch(addToFeed(null));
     getFeed();
   }, []);
-  // if (!feed) return;
+
+  const handleSwipe = async (direction, user) => {
+    if (!user) return;
+    try {
+      const status = direction === "right" ? "interested" : "ignored";
+      await axios.post(
+        `${BASE_URL}/request/send/${status}/${user._id}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      setSwiped([...swiped, user]);
+      setFeed((prev) => prev.filter((u) => u._id !== user._id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUndo = () => {
+    if (swiped.length === 0) return;
+    const last = swiped[swiped.length - 1];
+    setSwiped(swiped.slice(0, -1));
+    setFeed([last, ...feed]);
+  };
+
   if (!feed)
     return (
-      // <p className="text-center my-[40vh]">
-      //   <span className="loading loading-spinner loading-xl"></span>
-      // </p>
       <div className=" bg-base-300 rounded-lg relative w-84 h-[65vh] left-[35%] top-[5%] my-[3%] p-1 ">
         <div className="h-[55%] bg-base-100 m-2"></div>
         <div>
@@ -43,13 +63,26 @@ const Feed = () => {
         </div>
       </div>
     );
-  if (feed.length === 0)
-    return (
-      <p className="text-center text-2xl my-50">"No new users found!☹️"</p>
-    );
+
   return (
-    <div>
-      <UserCard user={feed[0]} />
+    <div className="flex justify-center mt-10 relative h-[80vh]">
+      {feed
+        .slice(0)
+        .reverse()
+        .map((user, index) => (
+          <UserCard
+            key={user._id}
+            user={user}
+            onSwipe={handleSwipe}
+            index={index}
+          />
+        ))}
+      <button
+        className="absolute top-4 right-4 btn btn-sm btn-outline"
+        onClick={handleUndo}
+      >
+        Undo
+      </button>
     </div>
   );
 };
